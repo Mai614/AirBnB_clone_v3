@@ -1,12 +1,16 @@
 #!/usr/bin/python3
 """
-    Flask route that returns json respone
+    Flask route that returns json response
 """
+
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models import storage, CNC
+from flasgger import Swagger
 from flasgger.utils import swag_from
 
+# Initialize Flask-Swagger
+swagger = Swagger(app_views)
 
 @app_views.route('/amenities/', methods=['GET', 'POST'])
 @swag_from('swagger_yaml/amenities_no_id.yml', methods=['GET', 'POST'])
@@ -29,7 +33,6 @@ def amenities_no_id(amenity_id=None):
         new_object = Amenity(**req_json)
         new_object.save()
         return jsonify(new_object.to_json()), 201
-
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'])
 @swag_from('swagger_yaml/amenities_id.yml', methods=['GET', 'DELETE', 'PUT'])
